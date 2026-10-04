@@ -114,7 +114,7 @@ function scoreFor(categoryId, values) {
   }
   if (categoryId === 'small-straight') return hasRun(values, 4) ? 30 : 0;
   if (categoryId === 'large-straight') return hasRun(values, 5) ? 40 : 0;
-  if (categoryId === 'five-kind') return counts.some((count) => count === 5) ? 150 : 0;
+  if (categoryId === 'five-kind') return counts.some((count) => count === 5) ? 50 : 0;
   return 0;
 }
 
@@ -134,14 +134,9 @@ function saveScore(categoryId) {
 
   const fiveOfAKind = dice.every((die) => die.value === dice[0].value);
   let bonusMessage = '';
-  if (fiveOfAKind && Object.hasOwn(player.scores, 'five-kind')) {
-    if (player.scores['five-kind'] === 0) {
-      player.scores['five-kind'] = 150;
-      bonusMessage = ' ช่อง 5x ที่เคยได้ 0 เปลี่ยนเป็น 150 คะแนนอัตโนมัติ';
-    } else {
-      player.fiveKindBonus += 100;
-      bonusMessage = ' ได้โบนัส 5x ซ้ำ +100 คะแนนอัตโนมัติ';
-    }
+  if (fiveOfAKind && player.scores['five-kind'] > 0) {
+    player.fiveKindBonus += 100;
+    bonusMessage = ' ได้โบนัส 5x ซ้ำ +100 คะแนนอัตโนมัติ';
   }
 
   player.scores[categoryId] = scoreFor(categoryId, dice.map((die) => die.value));
