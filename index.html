@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#171720">
+    <title>Baloot</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div class="brand-mark" aria-hidden="true">5</div>
+        <div>
+          <p class="eyebrow">เกมดีของผีพนัน</p>
+          <h1>Baloot</h1>
+        </div>
+        <button class="button button-quiet hidden" id="new-game" type="button">เริ่มเกมใหม่</button>
+      </header>
+
+      <section class="setup-panel panel" id="setup-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">พร้อมหรือยังจ๊ะ?</p>
+            <h2>ใส่ชื่อผู้เล่น</h2>
+          </div>
+          <span class="player-count">2 PLAYERS</span>
+        </div>
+        <form id="setup-form">
+          <div class="name-fields">
+            <label>
+              <span><i class="player-dot dot-one"></i> ผู้เล่นคนที่ 1</span>
+              <input id="player-one-name" name="playerOne" maxlength="18" placeholder="เช่น ไอ้โบ้" autocomplete="off" required>
+            </label>
+            <label>
+              <span><i class="player-dot dot-two"></i> ผู้เล่นคนที่ 2</span>
+              <input id="player-two-name" name="playerTwo" maxlength="18" placeholder="เช่น ไอ้หมูอ้วน" autocomplete="off" required>
+            </label>
+          </div>
+          <button class="button button-primary start-button" type="submit">เริ่มเล่น <span aria-hidden="true">→</span></button>
+        </form>
+      </section>
+
+      <section class="game hidden" id="game-panel">
+        <section class="turn-panel panel" aria-labelledby="turn-heading">
+          <div class="turn-info">
+            <p class="eyebrow">ตาของคุณ</p>
+            <h2 id="turn-heading">ผู้เล่นคนที่ 1</h2>
+            <p class="turn-hint" id="turn-hint">ทอยลูกเต๋า หรือเลือกช่องคะแนนหลังทอย</p>
+          </div>
+          <div class="turn-status">
+            <span class="roll-count" id="roll-count">ทอย 0 / 3</span>
+            <button class="button button-primary" id="roll-button" type="button">ทอยลูกเต๋า <span aria-hidden="true">↻</span></button>
+          </div>
+          <div class="dice-tray" id="dice-tray" aria-label="ลูกเต๋า"></div>
+          <p class="lock-hint" id="lock-hint">แตะลูกเต๋าเพื่อล็อกหน้าที่ต้องการก่อนทอยครั้งถัดไป</p>
+        </section>
+
+        <section class="score-panel panel" aria-labelledby="score-heading">
+          <div class="section-heading score-heading">
+            <div>
+              <p class="eyebrow">บันทึกคะแนน</p>
+              <h2 id="score-heading">Scoreboard</h2>
+            </div>
+            <p class="table-hint">เลือกช่องว่างเพื่อบันทึก</p>
+          </div>
+          <div class="score-summary" id="score-summary" aria-label="คะแนนรวม"></div>
+          <div class="scoreboard-grid" id="score-board"></div>
+          <p class="score-message" id="score-message" role="status" aria-live="polite"></p>
+        </section>
+
+      </section>
+
+      <div class="winner-overlay hidden" id="winner-overlay" role="dialog" aria-modal="true" aria-labelledby="winner-title">
+        <div class="winner-card panel">
+          <div class="winner-star" aria-hidden="true">★</div>
+          <p class="eyebrow">จบเกมแล้ว!</p>
+          <h2 id="winner-title">ผู้ชนะ</h2>
+          <p id="winner-detail"></p>
+          <button class="button button-primary" id="play-again" type="button">เล่นอีกครั้ง</button>
+        </div>
+      </div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
