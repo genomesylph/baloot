@@ -15,6 +15,14 @@ const categories = [
 ];
 
 const pipColors = ['', '#ed382e', '#f39a00', '#078cde', '#68c900', '#a900df', '#00bfb5'];
+const pipPositions = {
+  1: [3],
+  2: [1, 5],
+  3: [1, 3, 5],
+  4: [1, 2, 4, 5],
+  5: [1, 2, 3, 4, 5],
+  6: [1, 2, 4, 5, 7, 8],
+};
 const upperIds = new Set(['ones', 'twos', 'threes', 'fours', 'fives', 'sixes']);
 const faceCategory = { ones: 1, twos: 2, threes: 3, fours: 4, fives: 5, sixes: 6 };
 const elements = {
@@ -69,7 +77,10 @@ function startGame(event) {
 function rollDice() {
   if (!gameStarted || rolls >= 3 || isRolling) return;
   if (!rolls) dice = Array.from({ length: 5 }, () => ({ value: randomDie(), locked: false }));
-  else dice = dice.map((die) => die.locked ? die : { value: randomDie(), locked: false });
+  else {
+    dice.sort((first, second) => Number(second.locked) - Number(first.locked));
+    dice = dice.map((die) => die.locked ? die : { value: randomDie(), locked: false });
+  }
   rolls += 1;
   isRolling = true;
   elements.scoreMessage.textContent = '';
@@ -86,7 +97,7 @@ function rollDice() {
     isRolling = false;
     renderDice();
     renderRows();
-  }, 1120);
+  }, 1300);
 }
 
 function randomDie() {
@@ -94,7 +105,7 @@ function randomDie() {
 }
 
 function toggleLock(index) {
-  if (!rolls || rolls >= 3) return;
+  if (!rolls || rolls >= 3 || isRolling) return;
   dice[index].locked = !dice[index].locked;
   renderDice();
 }
@@ -178,26 +189,30 @@ function makeDie(value, index, interactive) {
   const die = document.createElement(interactive ? 'button' : 'span');
   const isLocked = interactive && dice[index].locked;
   die.className = `die${isLocked ? ' locked' : ''}${interactive && isRolling && !isLocked ? ' rolling' : ''}`;
+  if (interactive && isRolling && !isLocked) {
+    const unlockedToRight = dice.slice(index + 1).filter((candidate) => !candidate.locked).length;
+    die.style.setProperty('--roll-delay', `${unlockedToRight * 55}ms`);
+  }
   if (interactive) {
     die.type = 'button';
     die.setAttribute('aria-label', `ลูกเต๋าที่ ${index + 1} ได้ ${value}${dice[index].locked ? ' ล็อกอยู่' : ' ยังไม่ล็อก'}`);
     die.setAttribute('aria-pressed', String(dice[index].locked));
     die.addEventListener('click', () => toggleLock(index));
   }
-  setDieFace(die, value);
+  if (interactive) {
+    setDieFace(die, value);
+  } else {
+    pipPositions[value].forEach((position) => {
+      const pip = document.createElement('span');
+      pip.className = `pip pip-${position}`;
+      die.append(pip);
+    });
+  }
   return die;
 }
 
 function setDieFace(die, value) {
   die.style.setProperty('--pip-color', pipColors[value]);
-  const pipPositions = {
-    1: [3],
-    2: [1, 5],
-    3: [1, 3, 5],
-    4: [1, 2, 4, 5],
-    5: [1, 2, 3, 4, 5],
-    6: [1, 2, 4, 5, 7, 8],
-  };
   die.replaceChildren();
   pipPositions[value].forEach((position) => {
     const pip = document.createElement('span');
